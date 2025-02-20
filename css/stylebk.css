@@ -1,0 +1,324 @@
+
+
+body{
+    width: 100%;
+    
+    }
+
+/*@media only screen and (max-width: 375px) {
+    body {
+    width: 100%;
+    background-color: green;
+
+     }
+    .wrapper{
+        
+        background-color: red;
+        
+        position: relative;
+        width: 50%;
+        padding:10px 7px 10px 7px ;
+        margin: auto;
+         
+    }
+
+    .form1{
+        position: relative ;
+        background-color: lightgrey;
+        padding:10px  ;
+        align-content: center;
+
+    }
+
+    .form2{
+        width: 50%;
+        position: relative;    
+        border-style: solid;
+        border-width: thin;   
+        align-content: center;
+        margin: 50px auto;
+
+    }
+    .form2 input,.form3 input{
+        border-width: thin;
+    }
+
+    .form3{
+        width: 25%;
+        margin: auto;
+        position:relative;
+        background-color: lightgrey;
+        padding:10px  ;
+        align-content: center;
+    }
+
+
+    input{
+
+        width: 70%;
+        display: block;
+        background-color: white;
+        text-indent: 4px;
+        
+        border-radius: 6px;
+        height: 30px;
+        padding-right: 0;
+        margin:20px auto ;
+        font-size: 1rem;
+
+        color: #495057;
+       
+       }
+
+    button{
+
+        display: block;
+        border-radius: 15px;
+        height: 30px;
+        width: 200px;
+        padding-right: 0;
+        margin:0 0 10px 0 ;
+        font-size: 1rem;
+        color:white;
+        background-color: green;
+      
+       }
+
+} */ 
+
+
+
+/*-----dropdown-------
+
+    .dropdown-content{
+        margin-top: 50px;
+        display: none;
+        z-index: 1;
+        position: absolute;
+        right: 0;
+        width: 425%;
+        background-color:ghostwhite;
+        padding: 5px 0;
+        border-color: ghostwhite;
+        border-width: thin;
+    border-style: outset;
+
+
+        
+
+    }
+
+    .dropdown{
+        position: relative;
+      display: inline-block;
+     }
+
+    button{
+        background-color: green;
+    }
+
+    .dropdown .dropdown-content a{
+        text-decoration: none;
+        color: black;        
+        display: block;
+        width: 80%;
+        margin: 10px auto 10px;
+         padding:8px 0;
+        border-radius: 20px;
+        border-color: gray;
+        border-style: outset;
+        border-width: thin;
+        text-align:center; 
+        
+        font-size: 20px;
+        color: #495057;
+        
+        }
+
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+        margin: 10px;
+    }
+
+/*----navbar------*/
+ nav{
+    background-color:powderblue;
+    display: flex;
+    
+    align-items: center;
+    justify-content: center;
+    justify-content: space-between;
+
+    
+    
+ }   
+
+nav .l{
+    width: 20%;
+    
+    margin: 10px;
+    /*background-color: green;*/
+     display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-around;
+}
+
+nav form{
+    width: 25%;
+    margin: 10px;
+    
+    /*background-color: purple;*/
+
+     display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-around;
+}
+nav .l a{
+    width: 30%;
+
+
+}
+
+nav input{
+    width: 70%;
+    background-color: white;
+    text-indent: 4px;    
+    border-radius: 6px;
+    border-width: thin;
+    border-style: ridge;
+    border-color: powderblue;
+    height: 30px;
+    font-size: 1rem;
+    color: #495057;
+}
+
+nav img{
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border-width: thin;
+    border-style: outset;
+    border-color: powderblue;
+
+}
+
+/*@media only screen and (max-width: 1024px) {
+      body {
+        width: 100%;
+        background-color: lightblue;
+
+    }
+        .wrapper{
+            
+            background-color: red;
+            
+            position: relative;
+            width: 50%;
+            padding:10px 7px 10px 7px ;
+            margin: auto;
+             
+        }*/
+        .form1{
+            width: 35%;
+            margin:50px auto;
+           /* background-color: gold;*/
+                         
+        }
+
+        .form1 h2{
+            
+
+            font-size: 3rem;
+            text-align: center;
+            
+            /*background-color: pink;*/
+            color: #495057;
+        }
+        .form1 input,.form1 button{  
+            display: block;
+            width: 90%;
+            margin:10px auto 0 auto;
+            border-width: thin;
+            border-style: outset;
+            border-color: #ced4da;
+            /*background-color: plum;*/
+            text-indent: 4px;            
+            border-radius: 6px;
+            height: 30px;            
+            font-size: 1rem;
+            color: #495057;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        }
+
+        .form1 input{
+            /*background-color:tomato;*/
+        }
+
+        /*
+
+        .form2{
+            width: 25%;
+            padding:15px  ;
+             background-color: lightgrey;
+            position: relative;    
+            border-style: solid;
+            border-width: thin;   
+            align-content: center;
+            margin: 50px auto;
+             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+        }
+        .form2 input{
+            border: white;
+            border-width: thin;
+            border-style: outset;
+        }
+
+        .form3 input{
+            border-width: thin;
+        }
+
+        .form3{
+            width: 25%;
+            margin: auto;
+            position:relative;
+            background-color: lightgrey;
+            padding:10px  ;
+            align-content: center;
+        }
+
+
+        input{
+
+            width: 70%;
+            display: block;
+            background-color: white;
+            text-indent: 4px;
+            
+            border-radius: 6px;
+            height: 30px;
+            padding-right: 0;
+            margin:20px auto ;
+            font-size: 1rem;
+
+            color: #495057;
+           
+           }
+
+        button{
+
+            display: block;
+            border-radius: 15px;
+            height: 30px;
+            width: 200px;
+            padding-right: 0;
+            margin:0 0 10px 0 ;
+            font-size: 1rem;
+            color:white;
+            background-color: green;
+          
+           }
+*/
