@@ -6,9 +6,6 @@ if (isset($_POST['fname'])) {
 	$lname=$_POST['lname'];
 	$email=$_POST['email'];
 	$phone=$_POST['phone'];
-	$address=$_POST['address'];
-	$country=$_POST['country'];
-	$city=$_POST['city'];
 	$pwd=$_POST['pwd'];
 	$rpwd=$_POST['rpwd'];
 	$image='default.png';
@@ -16,7 +13,7 @@ if (isset($_POST['fname'])) {
 	require_once '../config.php';
 	require_once 'functions.php';
 
-	if(signupEmpty($fname,$lname,$email,$phone,$address,$country,$city,$pwd,$rpwd)!==false){
+	if(signupEmpty($fname,$lname,$email,$phone,$pwd,$rpwd)!==false){
 		echo('please fill all fields');
 		exit();
 	}
@@ -33,7 +30,7 @@ if (isset($_POST['fname'])) {
 		exit();
 	}
 	
-	createUser($conn,$fname,$lname,$email,$phone,$address,$country,$city,$pwd,$image);
+	createUser($conn,$fname,$lname,$email,$phone,$pwd,$image);
 	
 }else{
 	header("../location:add_customer.php");

@@ -2,8 +2,8 @@
    require_once 'config.php';
    require_once 'header.php';
    require_once 'inc/functions.php';
-   $t = geteditrnum($conn,$RtypeID,$b,$bs,$nr,$ns,$m,$RoomID);
-   print_r($t);
+  //  $t = geteditrnum($conn,$RtypeID,$b,$bs,$nr,$ns,$m,$RoomID);
+  //  print_r($t);
   //  $retVal = (gettype($_GET['y'])==NULL) ? 'yes': 'nope' ;
   //  echo gettype($_GET['y']);
   //  echo gettype($_GET['k']);

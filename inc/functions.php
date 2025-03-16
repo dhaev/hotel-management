@@ -1,15 +1,15 @@
 <?php
 //require_once '../config.php';
 //----------------------------------------INSERT-CUSTOMER-------------------------------------------
-	function insertCustomer($conn,$fname,$lname,$email,$phone,$address,$country,$city){
-				$sql="INSERT INTO customer (fname,lname,email,phone,address,country,city) VALUES(?,?,?,?,?,?,?);";
+	function insertCustomer($conn,$fname,$lname,$email,$phone){
+				$sql="INSERT INTO customer (fname,lname,email,phone) VALUES(?,?,?,?);";
 			$stmt=mysqli_stmt_init($conn);
 
 			if (!mysqli_stmt_prepare($stmt,$sql)){
 				echo('failed to connect');
 				exit();
 			}			
-			mysqli_stmt_bind_param($stmt,'sssssss',$fname,$lname,$email,$phone,$address,$country,$city);
+			mysqli_stmt_bind_param($stmt,'ssss',$fname,$lname,$email,$phone);
 			mysqli_stmt_execute($stmt);
 		}
 
@@ -67,15 +67,15 @@
 	}  
 
 //-----------------------------------------------------------------------			
-	function selectCustomer($conn,$fname,$lname,$email,$phone,$address,$country,$city){
+	function selectCustomer($conn,$fname,$lname,$email,$phone){
 	
-	$sql="SELECT CustomerID FROM customer WHERE  fname=? AND lname=? AND email=? AND phone=? AND address=? AND country=? AND city=?;";
+	$sql="SELECT CustomerID FROM customer WHERE  fname=? AND lname=? AND email=? AND phone=?;";
         $stmt=mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt,$sql)){
             echo('select cus failed');
              exit();
         }
-        mysqli_stmt_bind_param($stmt,'sssssss',$fname,$lname,$email,$phone,$address,$country,$city);
+        mysqli_stmt_bind_param($stmt,'ssss',$fname,$lname,$email,$phone);
         mysqli_stmt_execute($stmt);
         $result=mysqli_stmt_get_result($stmt);
         if (mysqli_num_rows($result)>0) {
@@ -89,9 +89,9 @@
         
     }
 //----------------------------------------SIGN-UP---------------------------------------------------
-	function signupEmpty($fname,$lname,$email,$phone,$address,$country,$city,$pwd,$rpwd){
+	function signupEmpty($fname,$lname,$email,$phone,$pwd,$rpwd){
 		$result;
-		if (empty($fname)||empty($lname)||empty($email)||empty($phone)||empty($address)||empty($country)||empty($city)||empty($pwd)||empty($rpwd)){
+		if (empty($fname)||empty($lname)||empty($email)||empty($phone)||empty($pwd)||empty($rpwd)){
 			$result = true;
 		}
 		else {
@@ -158,13 +158,13 @@
 		mysqli_stmt_close($stmt);
 	}
 
-	function createUser($conn,$fname,$lname,$email,$phone,$address,$country,$city,$pwd,$image){
-		$ID=selectCustomer($conn,$fname,$lname,$email,$phone,$address,$country,$city) ;
+	function createUser($conn,$fname,$lname,$email,$phone,$pwd,$image){
+		$ID=selectCustomer($conn,$fname,$lname,$email,$phone) ;
 		if($ID !==false){
 		$CustomerID=$ID['CustomerID']; 
 		}
 		else{
-			insertCustomer($conn,$fname,$lname,$email,$phone,$address,$country,$city);
+			insertCustomer($conn,$fname,$lname,$email,$phone);
 			$CustomerID=mysqli_insert_id($conn);  
 		}
 	    register($conn,$CustomerID,$pwd,$image);
@@ -173,10 +173,7 @@
 		$_SESSION['fname'] =$fname;
 		$_SESSION['lname'] =$lname;
 		$_SESSION['email'] =$email;
-		$_SESSION['phone'] =$phone;
-		$_SESSION['address'] =$address;
-		$_SESSION['country'] =$country;
-		$_SESSION['city'] =$city;			
+		$_SESSION['phone'] =$phone;		
 		$_SESSION['image'] =$image;
 		echo('welcome');
 			
@@ -277,9 +274,9 @@
 
 //----------------------------------------BOOK------------------------------------------------------
 
-	function bookEmpty($checkin,$checkout,$rtype,$rnum,$price,$fname,$lname,$email,$phone,$address,$country,$city){
+	function bookEmpty($checkin,$checkout,$rtype,$rnum,$price,$fname,$lname,$email,$phone){
 		$result;
-		if (empty($checkin)||empty($checkout)||empty($rtype)||empty($rnum)||empty($price)||empty($fname)||empty($lname)||empty($email)||empty($phone)||empty($address)||empty($country)||empty($city)){
+		if (empty($checkin)||empty($checkout)||empty($rtype)||empty($rnum)||empty($price)||empty($fname)||empty($lname)||empty($email)||empty($phone)){
 			$result = true;
 		}
 		else {
@@ -288,15 +285,15 @@
 		return $result;
 	}
 
-	function createBook($conn,$checkin,$checkout,$fname,$lname,$email,$phone,$address,$country,$city){
+	function createBook($conn,$checkin,$checkout,$fname,$lname,$email,$phone){
 
-		$ID=selectCustomer($conn,$fname,$lname,$email,$phone,$address,$country,$city) ;
+		$ID=selectCustomer($conn,$fname,$lname,$email,$phone) ;
 		if($ID !==false){
 		$CustomerID=$ID['CustomerID']; 
 		}
 		else{
 		//---------------------INSERT-CUSTOMER----------------------------------------
-			insertCustomer($conn,$fname,$lname,$email,$phone,$address,$country,$city);
+			insertCustomer($conn,$fname,$lname,$email,$phone);
 			$CustomerID=mysqli_insert_id($conn);
 		}
 		 
@@ -323,6 +320,7 @@
         $m=1;
     
 		$num = getrnum($conn,$RtypeID,$b,$bs,$checkin,$checkout,$m); 
+		var_dump($num);
 		foreach ($num as $array ) { 
 			
 			}
@@ -336,7 +334,7 @@
 	        echo(' insert bookrnum failed');
 	         exit();
 	    }
-	    mysqli_stmt_bind_param($stmt,'iiii',$BookID,$RoomID,$status,$price);
+	    mysqli_stmt_bind_param($stmt,'iiid',$BookID,$RoomID,$status,$price);
 	    mysqli_stmt_execute($stmt);
 	    mysqli_stmt_close($stmt);
 		echo('booking successful');
@@ -420,7 +418,7 @@
 
 	function rtypeExists($conn,$rtype){
 	//---------------------SELECT ROOM TYPE----------------------------------------
-		$sql="SELECT * FROM room_type WHERE rtype = ?;";
+		$sql="SELECT * FROM room_type WHERE RtypeID = ?;";
 		$stmt=mysqli_stmt_init($conn);
 
 		if (!mysqli_stmt_prepare($stmt,$sql)){
@@ -444,6 +442,32 @@
 		mysqli_stmt_close($stmt);
 	}
 
+	function rtypeprice($conn,$rtype){
+		//---------------------SELECT ROOM TYPE----------------------------------------
+			$sql="SELECT price FROM room_type WHERE RtypeID = ?;";
+			$stmt=mysqli_stmt_init($conn);
+	
+			if (!mysqli_stmt_prepare($stmt,$sql)){
+				echo('failed to connect');
+				exit();
+			}
+			mysqli_stmt_bind_param($stmt,'s',$rtype);
+			mysqli_stmt_execute($stmt);
+			$result=mysqli_stmt_get_result($stmt);
+			if (mysqli_num_rows($result)>0) {
+				while($row=mysqli_fetch_assoc($result)){
+					return $row;
+				}
+			}
+			else {
+				$result = false;
+				
+				echo('Room type does not exist');
+			}
+			return $result;
+			mysqli_stmt_close($stmt);
+		}
+	
 //----------------------------------------INSERT NEW ROOM-TYPE---------------------------------------
 	function addRtype($conn,$rtype,$price,$desc,$image){
 		$sql="INSERT INTO room_type (rtype,price,description,image) VALUES(?,?,?,?);";
@@ -452,7 +476,7 @@
 			echo('stmt insert add_rtype failed');
 			exit();
 		}
-		mysqli_stmt_bind_param($stmt,'siss',$rtype,$price,$desc,$image);
+		mysqli_stmt_bind_param($stmt,'sdss',$rtype,$price,$desc,$image);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		echo('New room type added');			
@@ -475,6 +499,8 @@
 //----------------------------------------FILE-UPLOAD------------------------------------------------
 	function img($fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination){
 		$result;
+		var_dump($allowed);
+		var_dump($fileEXT);
 
 		if (in_array($fileEXT,$allowed)) {
             if ($fileSize < 100000000) {
@@ -505,7 +531,8 @@
     function getrnum($conn,$RtypeID,$b,$bs,$r,$s,$m){
 	
     $sql="SELECT * FROM `room` WHERE room.RtypeID=? AND  room.RoomID NOT IN ( SELECT book_rnum.RoomID FROM `book_rnum`,`book` WHERE 
-        book_rnum.BookID=book.BookID AND (book_rnum.status=? or book_rnum.status=?) AND 
+        book_rnum.BookID=book.BookID AND 
+		-- (book_rnum.status=? or book_rnum.status=?) AND 
         
           ((book.check_in BETWEEN ADDDATE(STR_TO_DATE(?,'%Y-%m-%d'),INTERVAL 14 HOUR) AND ADDDATE(STR_TO_DATE(?,'%Y-%m-%d'),INTERVAL 12 HOUR))
          OR 
@@ -516,14 +543,15 @@
          ( ADDDATE(STR_TO_DATE(?,'%Y-%m-%d'),INTERVAL 14 HOUR) BETWEEN book.check_in AND book.check_out)
          OR
         
-         ( ADDDATE(STR_TO_DATE(?,'%Y-%m-%d'),INTERVAL 12 HOUR) BETWEEN book.check_in AND book.check_out)) UNION
-         SELECT maintenance.RoomID FROM maintenance WHERE maintenance.status=?)"; 
+         ( ADDDATE(STR_TO_DATE(?,'%Y-%m-%d'),INTERVAL 12 HOUR) BETWEEN book.check_in AND book.check_out)))";
+		// --   UNION
+        // --  SELECT maintenance.RoomID FROM maintenance WHERE maintenance.status=?)"; 
 	 $stmt=mysqli_stmt_init($conn); 
 	 if (!mysqli_stmt_prepare($stmt,$sql)){ 
 	 	echo('index.php ?  failed to get room'); 
 	 	exit();
 	 	 }
-	  mysqli_stmt_bind_param($stmt,'iiissssssi',$RtypeID,$b,$bs,$r,$s,$r,$s,$r,$s,$m);
+	  mysqli_stmt_bind_param($stmt,'issssss',$RtypeID,$r,$s,$r,$s,$r,$s);
 	  mysqli_stmt_execute($stmt);
 	  $result=mysqli_stmt_get_result($stmt);
 

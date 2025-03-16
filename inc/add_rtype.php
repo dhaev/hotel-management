@@ -29,7 +29,7 @@ if(isset($_FILES['file'])||isset($_POST['rtype'])){
       }
       elseif (isset($_GET['oldimage']) && ($fileName !== "")) {
             $RtypeID=$_GET['id'];
-            if (img($file,$fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination) !== true){
+            if (img($fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination) !== true){
                   exit();
             }
             if(empty($rtype)||empty($price)||empty($desc)){
@@ -42,7 +42,7 @@ if(isset($_FILES['file'])||isset($_POST['rtype'])){
             echo('Please select an image');
       } 
       else{
-            if (img($file,$fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination) !== true){
+            if (img($fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination) !== true){
                   exit();
             }
 

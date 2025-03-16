@@ -33,7 +33,7 @@ require_once 'header.php';
        ?></select>
         <input type="date" id='d' name="date" value="<?= date('Y-m-d')?>" class="c"> 
   <p class="w3-large w3-right">
-      <a href="add_rnum.php" class="w3-light-grey w3-button">
+      <a href="add_room.php" class="w3-light-grey w3-button">
         <i class="fa fa-plus"></i>
       </a>
         <i class="fa fa-table w3-button" id='roomgrid'></i>

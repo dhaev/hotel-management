@@ -20,5 +20,5 @@
 	    mysqli_stmt_execute($stmt);
 	    
 	    mysqli_stmt_close($stmt);
-	     echo('view_booked.php ? error=none');
+	    header('location:../view_booked.php ? page not found');
 	   
