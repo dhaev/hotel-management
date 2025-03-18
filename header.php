@@ -17,12 +17,12 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="jQuery.js"></script>
-    <script type="text/javascript" src="function.js"></script>
+    <!-- <script type="text/javascript" src="function.js"></script> -->
 </head>
 <body>
     <?php include 'sidenav.php'; ?>
 
-    <div class="w3-bar w3-border w3-brown nav w3-display-container">
+    <div class="w3-bar w3-border w3-brown nav w3-display-container" id="headbar">
         <?php if (isset($_SESSION['CustomerID'])) { ?>
             <div class="w3-bar-item w3-display-right">
                 <div class="w3-bar-item w3-right">

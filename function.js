@@ -1,35 +1,18 @@
 //-----PREVENT-SUBMIT----------
   $(document).ready(function(){
+   $('.w3_open').click(function () {
+    $("#main").css({'marginLeft':'15%'});
+    $("#mySidebar").css({'width':'15%'});
+    $("#mySidebar").css({'display':'block'});
+  });
 
-$('.book').change(function (){  
-   var po=this.id;
-   var s=po.split('_');
-  const cin=new Date($('#cin').val());
-  const cout =new Date($('#cout').val());
-  const today = new Date();
-today.setHours(1,0,0,0);
-   cin.getTime();
-   cout.getTime();
-   today.getTime();
+  $('.w3_close').click(function () {
+    $("#headbar").css({'marginLeft':'0%'});
+    $("#main").css({'marginLeft':'0%'});
+    $("#mySidebar").css({'display':'none'});
+   
+  });
 
-  let a= cout - cin;
-  // console.log(a);
-   if ( a < 0 || cout < cin ||cin <today) {
-     window.alert('please select a valid date');
-    $(this).val("");
-  } 
- else{
-  const diffDays = Math.ceil(a / (1000 * 60 * 60 * 24)); 
-  // console.log(diffDays,s);
-  if( typeof s[1] == 'undefined'){     
-     
-      shownum(diffDays); 
-  }
-  else{
-   shownum(diffDays,po);
-  }
-}
-});
 
     $(".dropdown-btn").each(function() {
       $( this ).click(function() { 
@@ -44,18 +27,47 @@ today.setHours(1,0,0,0);
   });
     });
 
-     $('.w3_open').click(function () {
-    $("#main").css({'marginLeft':'15%'});
-    $("#mySidebar").css({'width':'15%'});
-    $("#mySidebar").css({'display':'block'});
-    $("#openNav").css({'display':'none'});
-  });
+    document.getElementsByClassName('imageForm').addEventListener('change', function() {
+      var imageForm = getElementsByClassName('imageForm');
+      var formData = new FormData(imageForm);
+      var actionUrl = imageForm.getAttribute('action'); // Assuming the image upload URL is 'inc/profile_image.php'
+  
+      fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data); // Handle the response from the server
+        // Optionally, you can show a success message or update the image preview
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  
+    // Handle text data form submission
+    document.getElementsByClassName('textForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+      var textForm = document.getElementsByClassName('textForm');
+      var formData = new FormData(textForm);
+      var actionUrl = textForm.getAttribute('action'); // Assuming the text data URL is 'inc/profile_text.php'
+  
+      fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data); // Handle the response from the server
+        // Optionally, you can show a success message
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
 
-  $('.w3_close').click(function () {
-    $("#main").css({'marginLeft':'0%'});
-    $("#mySidebar").css({'display':'none'});
-    $("#openNav").css({'display':'block'});
-  });
+  
   
     $("form#profile").submit(function(e) {
       e.preventDefault();
@@ -78,45 +90,29 @@ today.setHours(1,0,0,0);
 
       
     //-----SUBMIT-FORMS-APART-FROM-PROFILE----------     
-    $("form").submit(function(e) {
-    e.preventDefault();
+//     $("form").submit(function(e) {
+//     e.preventDefault();
 
-    var formData = new FormData(this);
-            $.ajax({
-               url:$(this).attr('action'),
-               type:'post',
-               data:formData,
-               enctype:$(this).attr('enctype'),//not neccesary
-               cache: false,
-               contentType: false,
-              processData: false
+//     var formData = new FormData(this);
+//             $.ajax({
+//                url:$(this).attr('action'),
+//                type:'post',
+//                data:formData,
+//                enctype:$(this).attr('enctype'),//not neccesary
+//                cache: false,
+//                contentType: false,
+//               processData: false
                
-            }).done(function( data){
-              var res=$.parseJSON(data);
+//             }).done(function( data){
+//               var res=$.parseJSON(data);
 
-              alert( res.alert);
-              window.location.replace(res.url);
-            }).fail(function(response){alert('failed to submit')});
+//               alert( res.alert);
+//               window.location.replace(res.url);
+//             }).fail(function(response){alert('failed to submit')});
         
-});
+// });
    
-    //-------------------------DYNAMIC INPUT FORM-----------------------------------
-    $("#addRow").click(function () {
- let ind = parseInt($('#indx').val()) + 1;
 
-    var clone = $('#room').clone(true).appendTo('#newRow');
-    clone.find('[id*="rtype"]').attr({"id":"rtype_"+ind+"","name":"room["+ind+"][rtype]"}).find('option[value=""]').prop({'selected':true});
-    clone.find('[id*="numr"]').attr({"id":"numr_"+ind+"","name":"room["+ind+"][numr]"}).empty();
-    clone.find('[id*="price"]').attr({"id":"price_"+ind+"","name":"room["+ind+"][price]"}).val("0");
-    clone.removeAttr("id");
-    $('#indx').val(ind);
-       
-      });
-        // remove row
-      $(document).on('click', '#removeRow', function () {
-        $(this).closest('.w3-row-padding').remove();
-        // $('#indx').val(ind-1);
-      });
 
       $('.roomavail').change(function() {
         var a=$('#sortByStatus').val();
@@ -144,29 +140,12 @@ today.setHours(1,0,0,0);
   });
       // $('.editrtype').change(editDate);
 
+    // Fetch room types and populate dropdowns
+
+
     });
-//================================================================
-  function grtype(rtypeid){
-      $('.rtype').each(function(){
-              $(this).on('focus',rtype);
-              $(this).on('blur',rtype);
-              $(this).addClass('book');
-            });
-      $.ajax({
-        url:'getrtype',
-        type:'get',
-        cache: false,
-      }).done(function(response){ $('#rtype_0').html(response);
-    if (typeof rtypeid !== "undefined") {
-     
-        $('#rtype_0  option[value='+rtypeid+']').prop({'selected':true});
-       
-       }else{
-       
-       $('#rtype_0  option[value=""]').prop({'selected':true});}
-        }).fail(function(response){alert('failed to get room type')});
-       
-  }
+
+
 
   function  grnum(checkin,checkout,roomid,rtypeid){    
       
@@ -183,90 +162,33 @@ today.setHours(1,0,0,0);
         
   }
     
-//-----DISPLAY-IMAGE-PREVIEW----------
-  function showimg(){
-      $(document).ready(function(){ 
-      var formData = new FormData();
-      formData.append("file", file.files[0]);
-            $.ajax({
-               url:'inc/showimg.php',
-               type:'post',
-               data:formData,
-               enctype: 'multipart/form-data',//not neccesary
-               cache: false,
-               contentType: false,
-              processData: false
-               
-            }).done(function(imgsrc){$('#img').attr('src',imgsrc);}).fail(function(imgsrc){alert('failed to get img file')});
-         });
-    }
-
- function shownum(diffDays,s) {
-  const b=$('#cin').val();
-    const c=$('#cout').val();  
-    const ridlen=$('#rid').length; 
-    const roomid=$('#rid').val(); 
-// console.log("ridlen: "+ridlen);
-  if (typeof s === "undefined" && ridlen < 1) {
-    $('.rtype').each(function(){
-     var str= $(this).val();
-     // console.log($(this).closest('.w3-row-padding').find('[id*="price"]').val());
-     var price=$(this).closest('.w3-row-padding').find('[id*="price"]');
-     var numr=$(this).closest('.w3-row-padding').find('[id*="numr"]'); 
-             numr.load( 'getrnum.php',{q:str,r:b,s:c});
-             // price.load( 'getprice.php',{str,diffDays});
-   
-    // $.get('getrnum.php',{q:str,r:b,s:c}).done(function (data) { numr.html(data);}).fail(function (data) {
-    //  alert('failed');});
-     $.get('getprice.php',{str,diffDays}).done(function (data) {price.val(data);console.log(price.val(data));}).fail(function (data) {
-     aler
-     t('failed');}); 
-     });    
-  } 
-  else if((typeof s === "undefined" || typeof s !== "undefined") && ridlen > 0){
-    const rtypeid=$("#rtype_0").val();
-    if (rtypeid=="" || b=="" ||c=="") {
-      $("#numr_0").html("");
-      $("#price_0").val(0);
-      return;
-    }
-    $("#numr_0").load( 'getrnum.php',{q:rtypeid,r:b,s:c,rid:roomid},function( response, status, xhr ) {
-  if ( status == "error" ) {
-    var msg = "Sorry but there was an error: ";
-    $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-    return;
+function showimg() {
+  var file = document.getElementById('file').files[0];
+  if (file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+          var img = document.getElementById('img');
+          var preview = document.getElementById('preview');
+          preview.src = e.target.result;
+      }
+      reader.readAsDataURL(file);
   }
-  $('#numr_0 option[value='+roomid+']').prop({'disabled':true});
+}
 
-});
+function showEditMenu() {
+  document.getElementById('view_menu').style.display = 'none';
+  document.getElementById('edit_menu').style.display = 'block';
+}
 
-    // $.post('getrnum.php',{q:rtypeid,r:b,s:c,rid:roomid}).done(function (data) { $("#numr_0").html(data);
-    //    $('#numr_0 option[value='+roomid+']').prop({'disabled':true});}).fail(function (data) {alert('failed');});
-    // $.get('geteditrnum.php',{cin:b,cout:c,rid:roomid,rtid:rtypeid}).done(function (data) { $("#numr_0").html(data);
-       // $('#numr_0 option[value='+roomid+']').prop({'disabled':true});}).fail(function (data) {alert('failed');});
-     $.post('getprice.php',{str:rtypeid,diffDays}).done(function (data) {$("#price_0").val(data);}).fail(function (data) {
-     alert('failed');});
-  } 
-  else if(typeof s !== "undefined" && ridlen < 1) {
-    const str=$("#"+s+"").val();
-     var price=$("#"+s+"").closest('.w3-row-padding').find('[id*="price"]');
-     var numr=$("#"+s+"").closest('.w3-row-padding').find('[id*="numr"]');
-    if (str=="" || b=="" || c=="") {
-      numr.html("");
-      price.val(0);
-      return;
-    }
-    numr.load( 'getrnum.php',{q:str,r:b,s:c});
-
-    // $.post('getrnum.php',{q:str,r:b,s:c}).done(function (data) { numr.html(data);}).fail(function (data) {
-    //  alert('failed');});
-     $.post('getprice.php',{str,diffDays}).done(function (data) {price.val(data);}).fail(function (data) {
-     alert('failed');});
-
-   }else{
-    alert('error!:not successful')
-   }
- }
+function cancelUpload() {
+  var img = document.getElementById('img');
+  var preview = document.getElementById('preview');
+  var fileInput = document.getElementById('file');
+  fileInput.value = '';
+  preview.src = img.src;
+  document.getElementById('view_menu').style.display = 'block';
+  document.getElementById('edit_menu').style.display = 'none';
+}
 
 //----------------------SORT-BOOKING-BY-DATE------
   function booksort() {
@@ -428,4 +350,55 @@ $('.rtype').not(this).each(function(){array.push($(this).val())});
 //   }
 // }
 // });
+
+  function fetchRoomTypes() {
+    $.ajax({
+      url: 'api/getRoomTypes.php',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        window.roomTypes = data;
+        populateRoomTypes();
+      },
+      error: function() {
+        alert('Failed to fetch room types');
+      }
+    });
+  }
+
+  function populateRoomTypes(index = 0) {
+    var roomTypeSelect = $(`#rtype_${index}`);
+    roomTypes.forEach(function(roomType) {
+      var option = $('<option>', {
+        value: roomType.RtypeID,
+        text: roomType.rtype
+      });
+      roomTypeSelect.append(option);
+    });
+  }
+
+  function updatePrice(target) {
+    var row = $(target).closest('.room-row');
+    var roomTypeSelect = row.find('.rtype');
+    var numRoomsInput = row.find('.numr');
+    var priceInput = row.find('.price');
+
+    var selectedRoomType = roomTypes.find(function(roomType) {
+      return roomType.RtypeID == roomTypeSelect.val();
+    });
+
+    var checkinDate = new Date($('#cin').val());
+    var checkoutDate = new Date($('#cout').val());
+
+    if (selectedRoomType && numRoomsInput.val() && checkinDate && checkoutDate && !isNaN(checkinDate) && !isNaN(checkoutDate)) {
+      var pricePerRoom = selectedRoomType.price;
+      var numRooms = numRoomsInput.val();
+      var timeDiff = Math.abs(checkoutDate - checkinDate);
+      var numDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      var totalPrice = pricePerRoom * numRooms * numDays;
+      priceInput.val(totalPrice);
+    } else {
+      priceInput.val(0);
+    }
+  }
 

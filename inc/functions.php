@@ -219,32 +219,23 @@
  }
 
 //----------------------------------------UPDATE-PROFILE--------------------------------------------
-	function updateProfile($conn,$fname,$lname,$email,$phone,$address,$country,$city,$image,$id){
-		
-		updateCustomer($conn,$id,$fname,$lname,$email,$phone,$address,$country,$city);
-	    		
-		 $sql="UPDATE registered SET `image`=? WHERE `CustomerID`=?";
-	     $stmt=mysqli_stmt_init($conn);
 
-	    if (!mysqli_stmt_prepare($stmt,$sql)){
-	       echo('could not update');
-	    } 
+function updateProfileImage($conn,$image,$id){
+			
+		$sql="UPDATE registered SET `image`=? WHERE `CustomerID`=?";
+		$stmt=mysqli_stmt_init($conn);
 
-	    mysqli_stmt_bind_param($stmt,'si',$image,$id);
-	    mysqli_stmt_execute($stmt);
-	    mysqli_stmt_close($stmt);
+	if (!mysqli_stmt_prepare($stmt,$sql)){
+		echo('could not update');
+	} 
 
-
-			$_SESSION['fname'] =$fname;
-			$_SESSION['lname'] =$lname;
-			$_SESSION['email'] =$email;
-			$_SESSION['phone'] =$phone;
-			$_SESSION['address'] =$address;
-			$_SESSION['country'] =$country;
-			$_SESSION['city'] =$city;			
-			$_SESSION['image'] =$image;
-	    
-	    }
+	mysqli_stmt_bind_param($stmt,'si',$image,$id);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
+	
+		$_SESSION['image'] =$image;
+	
+	}
 
 //----------------------------------------ADD-ROOM--------------------------------------------------
 
@@ -321,9 +312,6 @@
     
 		$num = getrnum($conn,$RtypeID,$b,$bs,$checkin,$checkout,$m); 
 		var_dump($num);
-		foreach ($num as $array ) { 
-			
-			}
 		$rnum = $array['rnum'];
 		$RoomID=$array['RoomID'];
 		
@@ -482,22 +470,35 @@
 		echo('New room type added');			
 	}
 	//------------------------------------UPDATE-ROOM-TYPE--------------------------
-	function updateRtype($conn,$rtype,$price,$desc,$image,$RtypeID){
+	function updateRtype($conn,$rtype,$price,$desc,$RtypeID){
 	
-		$sql="UPDATE room_type SET rtype=?,price=?,description=?,image=? WHERE RtypeID=?";
+		$sql="UPDATE room_type SET rtype=?,price=?,description=?, WHERE RtypeID=?";
 		$stmt=mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt,$sql)){
 			echo(' failed to update rtype');
 			exit();
 		}
-		mysqli_stmt_bind_param($stmt,'sissi',$rtype,$price,$desc,$image,$RtypeID);
+		mysqli_stmt_bind_param($stmt,'sisi',$rtype,$price,$desc,$RtypeID);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		echo('room type updated');			
+	}
+	function updateRtypeImage($conn,$image,$RtypeID){
+	
+		$sql="UPDATE room_type SET image=? WHERE RtypeID=?";
+		$stmt=mysqli_stmt_init($conn);
+		if (!mysqli_stmt_prepare($stmt,$sql)){
+			echo(' failed to update rtype');
+			exit();
+		}
+		mysqli_stmt_bind_param($stmt,'si',$image,$RtypeID);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		echo('room type updated');			
 	}
 
 //----------------------------------------FILE-UPLOAD------------------------------------------------
-	function img($fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination){
+	function invalidImage($fileEXT,$allowed,$fileSize,$fileError,$image,$fileTempName,$fileDestination){
 		$result;
 		var_dump($allowed);
 		var_dump($fileEXT);
@@ -506,21 +507,21 @@
             if ($fileSize < 100000000) {
                 if ($fileError === 0) {
                     move_uploaded_file($fileTempName, $fileDestination);						
-					$result=true;                         
+					$result=false;                         
                 }else {
                     echo ("file could not be uploaded");
                     //print_r($file);
-                    $result=false;
+                    $result=true;
             	}
                   
     	    } else {
 				echo ("file is too large");
-				$result=false;
+				$result=true;
             }
             
         } else {
             echo('invalid image type...only jpg jpeg and png files supported');
-            $result=false;
+            $result=true;
         }  
 
 		return $result;
