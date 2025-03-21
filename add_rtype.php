@@ -3,7 +3,7 @@ require_once 'config.php';
 require_once 'header.php';
 ?>
 <div class="w3-content">              
-<form class="form1 w3-row-padding" id="form1" action="inc/add_rtype" method="post" enctype="multipart/form-data">
+<form class="add_room_type w3-row-padding" id="textForm" action="inc/add_rtype" method="post" enctype="multipart/form-data">
    
    <div class="w3-col"><h2 class="w3-center w3-padding-large w3-margin-top w3-margin-bottom">Room Type</h2>
          </div><div class="w3-half">

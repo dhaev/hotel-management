@@ -3,7 +3,7 @@ require_once 'config.php';
 require_once 'header.php';
 ?>
               
-              <form class="form1" id="form1" action="inc/add_room" method="post">
+              <form class="add_room" id="textForm" action="inc/add_room" method="post">
    <h2>Add Room</h2>
    <div>
       <select id="rtype" name="rtype" required>

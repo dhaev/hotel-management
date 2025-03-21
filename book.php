@@ -21,7 +21,7 @@ if (isset($_SESSION['email'])) {
 
 <div class="container mt-5">
    <h2 class="text-center mb-4">Book Room</h2>
-   <form id="form1" action="inc/book.php" method="post">
+   <form id="textForm" action="inc/book.php" method="post">
       <div class="form-row justify-content-center">
          <div class="form-group col-md-4">
             <label for="cin">Check in</label>

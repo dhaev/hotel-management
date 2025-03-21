@@ -2,6 +2,12 @@
   height: 100%;
 }
 
+#headbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Adjust the z-index value as needed */
+}
 .nav{
   position: fixed;
 }

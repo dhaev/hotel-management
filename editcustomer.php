@@ -31,7 +31,7 @@ $stmt=mysqli_stmt_init($conn);
 }
 
 ?>
-<div class="w3-content"><form class="textForm" id="form1" action="inc/update_customer" method="post">
+<div class="w3-content"><form class="textForm" id="textForm" action="inc/update_customer" method="post">
          <div class="w3-row-padding ">
             <div class="w3-col"><h2 class="w3-center w3-padding-large w3-margin-top w3-margin-bottom">Edit Customer Details</h2>
          </div>

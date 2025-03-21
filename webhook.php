@@ -101,6 +101,63 @@ if ($event->type == 'checkout.session.completed') {
 
     $conn->close();
 }
+if ($event->type == 'payment_intent.succeeded') {
+  $payment_intent = $event->data->object;
+  $intent = $payment_intent;
 
+  // Handle the event
+  error_log('🔔  PaymentIntent was successful!');
+  $conn->begin_transaction();
+
+  try {
+    error_log('🔔  Transaction started!');
+    $reservation_id = $intent->metadata->reservation_id;
+    $start_date = $intent->metadata->start_date; 
+    $end_date = $intent->metadata->end_date;
+    $room = json_decode($intent->metadata->rooms, true);
+    $total_amount = $intent->amount_received / 100;
+    $currency = $intent->currency;
+    $payment_status = 'paid';
+
+    // Update reservation dates
+    $stmt = $conn->prepare("UPDATE reservations SET start_date = ?, end_date = ? WHERE id = ?");
+    $stmt->bind_param("ssi", $start_date, $end_date, $reservation_id);
+    $stmt->execute();
+    $stmt->close();
+
+    // Update reservation details
+    $stmt = $conn->prepare("DELETE FROM reservation_details WHERE reservation_id = ?");
+    $stmt->bind_param("i", $reservation_id);
+    $stmt->execute();
+    $stmt->close();
+
+    foreach ($room as $value) {
+      $type_id = $value['rtype'];
+      $num_rooms = $value['numr'];
+      $stmt = $conn->prepare("INSERT INTO reservation_details (reservation_id, type_id, num_rooms) VALUES (?, ?, ?)");
+      $stmt->bind_param("iii", $reservation_id, $type_id, $num_rooms);
+      $stmt->execute();
+      $stmt->close();
+    }
+
+    // Store payment details
+    error_log('🔔  Storing payment details!');
+    $stmt = $conn->prepare("INSERT INTO payments (reservation_id, amount, currency, payment_status, payment_date, stripe_payment_id, payment_intent) VALUES (?, ?, ?, ?, NOW(), ?, ?)");
+    $stmt->bind_param("idssss", $reservation_id, $total_amount, $currency, $payment_status, $intent->latest_charge, $intent->id);
+    $stmt->execute();
+    $stmt->close();
+
+    // Commit transaction
+    error_log('🔔  Committing transaction!');
+    $conn->commit();
+  } catch (Exception $e) {
+    // Rollback transaction on error
+    error_log('🔔  Rolling back transaction!');
+    $conn->rollback();
+    echo "Error: " . $e->getMessage();
+  }
+
+  $conn->close();
+}
 http_response_code(200);
 ?>

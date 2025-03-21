@@ -4,7 +4,7 @@ require_once 'header.php';
 ?>
 <div class="container mt-5">
    <h2 class="text-center mb-4">Sign up</h2>
-   <form id="form1" action="inc/add_customer" method="post">
+   <form id="textForm" action="inc/add_customer" method="post">
       <div class="form-row justify-content-center">
          <div class="form-group col-md-4">
             <label for="fname">Firstname</label>
