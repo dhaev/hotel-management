@@ -19,7 +19,7 @@ $stmt=mysqli_stmt_init($conn);
             $('#id').val('<?= $row['CustomerID'];?>');
             $('#fname').val('<?= $row['fname'];?>');
             $('#lname').val('<?= $row['lname'];?>');
-            $('#email').val('<?=  $row['email'];?>');
+            $('#Email').val('<?=  $row['email'];?>');
             $('#phone').val('<?= $row['phone'];?>');
             $('#address').val('<?= $row['address'];?>');
             $('#country').val('<?= $row['country'];?>');
@@ -31,7 +31,7 @@ $stmt=mysqli_stmt_init($conn);
 }
 
 ?>
-<div class="w3-content"><form class="form1" id="form1" action="inc/update_customer" method="post">
+<div class="w3-content"><form class="textForm" id="form1" action="inc/update_customer" method="post">
          <div class="w3-row-padding ">
             <div class="w3-col"><h2 class="w3-center w3-padding-large w3-margin-top w3-margin-bottom">Edit Customer Details</h2>
          </div>
@@ -41,44 +41,44 @@ $stmt=mysqli_stmt_init($conn);
                <div class="w3-half">
                   <p>
                      <label class=" w3-padding-large ">Firstname</label></p><p>
-                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="fname" name="fname" placeholder="Firstname..." value='grgrgg' required>
+                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="fname" name="fname"  required>
                   </p>
                </div>
       
               <div class="w3-half">
                   <p>
                      <label class=" w3-padding-large ">Lastname</label></p><p>
-                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="lname" name="lname" placeholder="Lastname..." value='grgrgg' required>
+                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="lname" name="lname" required>
                   </p>
                </div>
       
                <div class="w3-half">
                   <p>
                      <label class=" w3-padding-large ">Email</label></p><p>
-                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="email" id="email" name="email" placeholder="Email..."value='grgrgglogo@bron.coms' required>
+                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="email" id="Email" name="email"  required>
                   </p>
                </div>
       
               <div class="w3-half">
                   <p>
                      <label class=" w3-padding-large ">Phone number</label></p><p>
-                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="telephone" id="phone" name="phone" placeholder="Phone number..." value='9876556789' required>
+                     <input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="telephone" id="phone" name="phone" >
                   </p>
                </div>
                   <div class="w3-col">
                   <p>
-                     <label class=" w3-padding-large ">Address</label></p><p><input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="address" name="address" placeholder="Address..." value='grgrgg' required>
+                     <label class=" w3-padding-large ">Address</label></p><p><input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="address" name="address" >
                   </p>
                </div>
       
                <div class="w3-half">
                   <p>
-                     <label class=" w3-padding-large ">Country</label></p><p></p><p><input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="country" name="country" placeholder="Country..." value='grgrgg' required>
+                     <label class=" w3-padding-large ">Country</label></p><p></p><p><input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="country" name="country" >
                   </p>
                </div>
       
               <div class="w3-half">
-                  <p><label class=" w3-padding-large ">City</label></p><p><input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="city" name="city" placeholder="City..." value='grgrgg' required>
+                  <p><label class=" w3-padding-large ">City</label></p><p><input class="w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" type="text" id="city" name="city" >
                   </p>
                </div>
    

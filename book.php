@@ -1,10 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'header.php';
-
 ?>
-
-
 
 <?php 
 if (isset($_SESSION['email'])) {
@@ -83,6 +80,16 @@ if (isset($_SESSION['email'])) {
          </div>
       </div>
       <div class="form-row justify-content-center">
+         <div class="form-group col-md-4">
+            <label for="card-element">Credit or debit card</label>
+            <div id="card-element">
+              <!-- A Stripe Element will be inserted here. -->
+            </div>
+            <!-- Used to display form errors. -->
+            <div id="card-errors" role="alert"></div>
+         </div>
+      </div>
+      <div class="form-row justify-content-center">
          <div class="form-group col-md-4 text-center">
             <button class="btn btn-primary" type="submit" name="book">Book</button>
          </div>
@@ -90,6 +97,7 @@ if (isset($_SESSION['email'])) {
    </form>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
    fetchRoomTypes();
@@ -136,11 +144,65 @@ document.addEventListener('DOMContentLoaded', function() {
       updatePrice(event.target);
     }
   });
+
+  // Stripe Elements
+//   var stripe = Stripe('pk_test_51R4LZERq0GzSOwDwRwknBaC44wxC1MdiJ8WdUx1MMwefRtZlHYbmdMH9qID57Oje6BiVfcB5huEcsY26FgdBGnYb00hojg3z6l');
+//   var elements = stripe.elements();
+//   var card = elements.create('card');
+//   card.mount('#card-element');
+
+//   card.addEventListener('change', function(event) {
+//     var displayError = document.getElementById('card-errors');
+//     if (event.error) {
+//       displayError.textContent = event.error.message;
+//     } else {
+//       displayError.textContent = '';
+//     }
+//   });
+
+  var form = document.getElementById('form1');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+   //  stripe.createPaymentMethod( {type: 'card',
+   //  card: card}).then(function(result) {
+   //    console.log(result);
+   //    if (result.error) {
+   //      var errorElement = document.getElementById('card-errors');
+   //      errorElement.textContent = result.error.message;
+   //    } else {
+   //      var hiddenInput = document.createElement('input');
+   //    //   hiddenInput.setAttribute('type', 'hidden');
+   //      hiddenInput.setAttribute('name', 'payment_method_id');
+   //      console.log('LOGGING');
+   //      console.log(result.paymentMethod.id);
+   //      hiddenInput.setAttribute('value', result.paymentMethod.id);
+   //      form.appendChild(hiddenInput);
+   //    }
+   // });
+      var formData = new FormData(form);
+      var actionUrl = form.getAttribute('action'); // Assuming the image upload URL is 'inc/profile_image.php'
+  
+      fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data); // Handle the response from the server
+        // Optionally, you can show a success message or update the image preview
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+      //   form.submit();
+  
+  });
 });
 
+</script>
 
- </script>
-
- <?php
- require_once 'footer.php';
- ?>
+<?php
+require_once 'footer.php';
+?>

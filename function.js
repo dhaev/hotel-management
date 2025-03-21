@@ -27,8 +27,8 @@
   });
     });
 
-    document.getElementsByClassName('imageForm').addEventListener('change', function() {
-      var imageForm = getElementsByClassName('imageForm');
+    document.getElementById('imageForm').addEventListener('change', function() {
+      var imageForm = getElementById('imageForm');
       var formData = new FormData(imageForm);
       var actionUrl = imageForm.getAttribute('action'); // Assuming the image upload URL is 'inc/profile_image.php'
   
@@ -47,9 +47,9 @@
     });
   
     // Handle text data form submission
-    document.getElementsByClassName('textForm').addEventListener('submit', function(event) {
+    document.getElementById('textForm').addEventListener('submit', function(event) {
       event.preventDefault(); // Prevent the default form submission
-      var textForm = document.getElementsByClassName('textForm');
+      var textForm = document.getElementById('textForm');
       var formData = new FormData(textForm);
       var actionUrl = textForm.getAttribute('action'); // Assuming the text data URL is 'inc/profile_text.php'
   
@@ -66,53 +66,6 @@
         console.error('Error:', error);
       });
     });
-
-  
-  
-    $("form#profile").submit(function(e) {
-      e.preventDefault();
-      //-----CHANGE-PROFILE-PICTURE----------
-      var pre=$('#img').attr('src');
-      console.log(pre);
-      let formData = new FormData(this);
-        $.ajax({
-           url:$(this).attr('action'),
-           type:'post',
-           data:{formData,pre},
-           enctype:$(this).attr('enctype'),//not neccesary
-           cache: false,
-           contentType: false,
-          processData: false
-         
-      }).done(function(response){alert(response);$('.profileimg').attr('src',response);
-    }).fail(function(response){alert('failed to submit')});
-    });
-
-      
-    //-----SUBMIT-FORMS-APART-FROM-PROFILE----------     
-//     $("form").submit(function(e) {
-//     e.preventDefault();
-
-//     var formData = new FormData(this);
-//             $.ajax({
-//                url:$(this).attr('action'),
-//                type:'post',
-//                data:formData,
-//                enctype:$(this).attr('enctype'),//not neccesary
-//                cache: false,
-//                contentType: false,
-//               processData: false
-               
-//             }).done(function( data){
-//               var res=$.parseJSON(data);
-
-//               alert( res.alert);
-//               window.location.replace(res.url);
-//             }).fail(function(response){alert('failed to submit')});
-        
-// });
-   
-
 
       $('.roomavail').change(function() {
         var a=$('#sortByStatus').val();

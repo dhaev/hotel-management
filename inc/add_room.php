@@ -3,6 +3,7 @@
 if(isset($_POST['rnum'])&&isset($_POST['rnum'])){
    $rtype=$_POST['rtype'];
    $rnum=$_POST['rnum'];
+   var_dump($_POST);
    
    require_once '../config.php';
    require_once 'functions.php';

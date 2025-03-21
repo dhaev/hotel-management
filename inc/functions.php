@@ -244,12 +244,11 @@ function updateProfileImage($conn,$image,$id){
 		return $empty;
 	}
 
-	function createRoom($conn,$rtype,$rnum){
+	function createRoom($conn,$RtypeID,$rnum){
+		// var_dump($rtype);
 	//---------------------SELECT ROOM TYPE----------------------------------------
-		$Rtype=rtypeExists($conn,$rtype);
-	    $RtypeID=$Rtype['RtypeID'];  
-	//--------------------INSERT NEW ROOM---------------------------
-		$sql="INSERT INTO room (rnum,RtypeID) VALUES(?,?);";
+		if(rtypeExists($conn,$RtypeID)){
+			$sql="INSERT INTO room (rnum,RtypeID) VALUES(?,?);";
 		$stmt=mysqli_stmt_init($conn);
 
 		if (!mysqli_stmt_prepare($stmt,$sql)){
@@ -262,6 +261,13 @@ function updateProfileImage($conn,$image,$id){
 		mysqli_stmt_close($stmt);
 		echo('New Room Added');
 	}
+	
+	else{
+		echo('Room type does not exist');
+	}
+	} 
+	//--------------------INSERT NEW ROOM---------------------------
+		
 
 //----------------------------------------BOOK------------------------------------------------------
 
@@ -312,8 +318,8 @@ function updateProfileImage($conn,$image,$id){
     
 		$num = getrnum($conn,$RtypeID,$b,$bs,$checkin,$checkout,$m); 
 		var_dump($num);
-		$rnum = $array['rnum'];
-		$RoomID=$array['RoomID'];
+		$rnum = $num['rnum'];
+		$RoomID=$num['RoomID'];
 		
 
 	    $sql="INSERT INTO book_rnum (BookID,RoomID,status,price) VALUES(?,?,?,?)";
@@ -404,7 +410,7 @@ function updateProfileImage($conn,$image,$id){
 		return $result;
 	}
 
-	function rtypeExists($conn,$rtype){
+	function rtypeExists($conn,$RtypeID){
 	//---------------------SELECT ROOM TYPE----------------------------------------
 		$sql="SELECT * FROM room_type WHERE RtypeID = ?;";
 		$stmt=mysqli_stmt_init($conn);
@@ -413,7 +419,7 @@ function updateProfileImage($conn,$image,$id){
 			echo('failed to connect');
 			exit();
 		}
-		mysqli_stmt_bind_param($stmt,'s',$rtype);
+		mysqli_stmt_bind_param($stmt,'i',$RtypeID);
 		mysqli_stmt_execute($stmt);
 		$result=mysqli_stmt_get_result($stmt);
 		if (mysqli_num_rows($result)>0) {

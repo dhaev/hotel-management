@@ -12,7 +12,8 @@ if (isset($_POST['cid'])) {
       $country=$_POST['country'];
       $city=$_POST['city'];    
       
-      updateCustomer($conn,$id,$fname,$lname,$email,$phone,$address,$country,$city);   
+      updateCustomer($conn,$id,$fname,$lname,$email,$phone,$address,$country,$city); 
+      exit();  
 }else{
       
 }
