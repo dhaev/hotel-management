@@ -131,9 +131,6 @@ function processRefunds($conn, $reservation_id, $refund_amount) {
                 throw new Exception("Refund failed: " . $refund->status);
             }
 
-            $conn->begin_transaction();
-
-
             // Store refund details in the database
             $sql_refund = "INSERT INTO refunds (payment_id, payment_intent, amount, refund_date, stripe_refund_id) VALUES (?, ?, ?, NOW(), ?)";
             $stmt_refund = mysqli_stmt_init($conn);
@@ -154,7 +151,6 @@ function processRefunds($conn, $reservation_id, $refund_amount) {
             throw $e;
         }
     }
-                
 
     if ($remaining_refund_amount > 0) {
         throw new Exception("Not enough funds to refund the full amount");
@@ -194,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $amount_to_charge += $totalPrice;
     }
 
-    $total_amount_to_charge = $amount_to_charge - $total_amount_previously_charged;
+    $total_amount_to_charge = $total_amount_previously_charged - $amount_to_charge;
     if ($total_amount_to_charge > 0) {
         $payment_intent = \Stripe\PaymentIntent::create([
             'amount' => $total_amount_to_charge * 100, // Stripe expects the amount in cents
@@ -209,38 +205,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($total_amount_to_charge < 0) {
         $total_amount_to_refund = abs($total_amount_to_charge);
         processRefunds($conn, $reservation_id, $total_amount_to_refund);
-        // Update reservation dates
-        $stmt = $conn->prepare("UPDATE reservations SET start_date = ?, end_date = ? WHERE id = ?");
-        $stmt->bind_param("ssi", $start_date, $end_date, $reservation_id);
-        $stmt->execute();
-        $stmt->close();
 
-        // Update reservation details
-        $stmt = $conn->prepare("DELETE FROM reservation_details WHERE reservation_id = ?");
-        $stmt->bind_param("i", $reservation_id);
-        $stmt->execute();
-        $stmt->close();
-
-        foreach ($room as $value) {
-            $type_id = $value['rtype'];
-            $num_rooms = $value['numr'];
-            $room_type_details = rtypeExists($conn, $type_id);
-            $pricePerRoom = $room_type_details["price"];
-            $roomtype = $room_type_details["rtype"];
-
-            $stmt = $conn->prepare("INSERT INTO reservation_details (reservation_id, type_id, num_rooms) VALUES (?, ?, ?)");
-            $stmt->bind_param("iii", $reservation_id, $type_id, $num_rooms);
-            $stmt->execute();
-            $stmt->close();
-        }
-        exit();
 
     }
 
     if ($total_amount_to_charge == 0) {
         
     try {
-        $conn->begin_transaction();
         // Update reservation dates
         $stmt = $conn->prepare("UPDATE reservations SET start_date = ?, end_date = ? WHERE id = ?");
         $stmt->bind_param("ssi", $start_date, $end_date, $reservation_id);
@@ -280,6 +251,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
 }

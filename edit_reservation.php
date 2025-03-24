@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  var form = document.getElementById('edit_reservation_form');
+  var form = document.getElementById('textForm');
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 

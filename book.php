@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //     }
 //   });
 
-  var form = document.getElementById('form1');
+  var form = document.getElementById('textForm');
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 
