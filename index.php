@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('Payment Intent ID:', paymentIntentId);
 
   try {
-    const response = await fetch(`https://dc04-2607-fea8-d5c3-8100-78fa-8e86-d578-6328.ngrok-free.app/client_secret.php?payment_intent_id=${paymentIntentId}`);
+    const response = await fetch(`https://b1e5-2607-fea8-d5c3-8100-b55c-d2b1-c034-a0ce.ngrok-free.app/client_secret.php?payment_intent_id=${paymentIntentId}`);
     const {client_secret: clientSecret} = await response.json();
 
     if (clientSecret) {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           // `Elements` instance that was used to create the Payment Element
           elements,
           confirmParams: {
-            return_url: 'https://dc04-2607-fea8-d5c3-8100-78fa-8e86-d578-6328.ngrok-free.app/payment_status.php',
+            return_url: 'https://b1e5-2607-fea8-d5c3-8100-b55c-d2b1-c034-a0ce.ngrok-free.app/payment_status.php',
           },
         });
 

@@ -22,14 +22,14 @@ if (isset($_SESSION['email'])) {
 <div class="container mt-5">
    <h2 class="text-center mb-4">Book Room</h2>
    <form id="textForm" action="inc/book.php" method="post">
-      <div class="form-row justify-content-center">
+      <div class="form-row justify-content-center dates">
          <div class="form-group col-md-4">
             <label for="cin">Check in</label>
-            <input type="date" class="form-control" name="checkin" id="cin" value="<?php echo date('Y-m-d')?>" required>
+            <input type="date" class="form-control date" name="checkin" id="cin" value="<?php echo date('Y-m-d')?>" required>
          </div>
          <div class="form-group col-md-4">
             <label for="cout">Check out</label>
-            <input type="date" class="form-control" name="checkout" id="cout" required>
+            <input type="date" class="form-control date" name="checkout" id="cout" value="<?php echo date('Y-m-d', strtotime('+1 day'));?>" required>
          </div>
       </div>
       <div id="roomContainer">
@@ -40,6 +40,7 @@ if (isset($_SESSION['email'])) {
                   <option value="">Select Room Type</option>
                   <!-- Options will be populated by JavaScript -->
                </select>
+               <div class="availability-message text-danger"></div>
             </div>
             <div class="form-group col-md-2">
                <label for="numr_0">Number of Rooms</label>
@@ -49,8 +50,8 @@ if (isset($_SESSION['email'])) {
                <label for="price_0">Price</label>
                <input class="form-control price" type="text" name="room[0][price]" id="price_0" value="0" readonly>
             </div>
-            <div class="form-group col-md-1 align-self-end">
-               <button type="button" class="btn btn-danger remove-room">Remove</button>
+            <div class="form-group col-md-1 ">
+               <button type="button" class="btn btn-danger remove-room mt-4">Remove</button>
             </div>
          </div>
       </div>
@@ -100,7 +101,7 @@ if (isset($_SESSION['email'])) {
 <script src="https://js.stripe.com/v3/"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-   fetchRoomTypes();
+   checkRoomAvailability();
 
   document.getElementById('addRoom').addEventListener('click', function() {
     var roomContainer = document.getElementById('roomContainer');
@@ -115,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <select class="form-control rtype" id="rtype_${newIndex}" name="room[${newIndex}][rtype]" required>
           <option value="">Select Room Type</option>
         </select>
+        <div class="availability-message text-danger"></div>
       </div>
       <div class="form-group col-md-2">
         <label for="numr_${newIndex}">Number of Rooms</label>
@@ -124,8 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <label for="price_${newIndex}">Price</label>
         <input class="form-control price" type="text" name="room[${newIndex}][price]" id="price_${newIndex}" value="0" readonly>
       </div>
-      <div class="form-group col-md-1 align-self-end">
-        <button type="button" class="btn btn-danger remove-room">Remove</button>
+      <div class="form-group col-md-1">
+        <button type="button" class="btn btn-danger remove-room mt-4">Remove</button>
       </div>
     `;
 
@@ -141,66 +143,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('roomContainer').addEventListener('change', function(event) {
     if (event.target.classList.contains('rtype') || event.target.classList.contains('numr')) {
-      updatePrice(event.target);
+      updatePriceAndAvailability(event.target);
     }
   });
 
-  // Stripe Elements
-//   var stripe = Stripe('pk_test_51R4LZERq0GzSOwDwRwknBaC44wxC1MdiJ8WdUx1MMwefRtZlHYbmdMH9qID57Oje6BiVfcB5huEcsY26FgdBGnYb00hojg3z6l');
-//   var elements = stripe.elements();
-//   var card = elements.create('card');
-//   card.mount('#card-element');
-
-//   card.addEventListener('change', function(event) {
-//     var displayError = document.getElementById('card-errors');
-//     if (event.error) {
-//       displayError.textContent = event.error.message;
-//     } else {
-//       displayError.textContent = '';
-//     }
-//   });
-
-  var form = document.getElementById('textForm');
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-   //  stripe.createPaymentMethod( {type: 'card',
-   //  card: card}).then(function(result) {
-   //    console.log(result);
-   //    if (result.error) {
-   //      var errorElement = document.getElementById('card-errors');
-   //      errorElement.textContent = result.error.message;
-   //    } else {
-   //      var hiddenInput = document.createElement('input');
-   //    //   hiddenInput.setAttribute('type', 'hidden');
-   //      hiddenInput.setAttribute('name', 'payment_method_id');
-   //      console.log('LOGGING');
-   //      console.log(result.paymentMethod.id);
-   //      hiddenInput.setAttribute('value', result.paymentMethod.id);
-   //      form.appendChild(hiddenInput);
-   //    }
-   // });
-      var formData = new FormData(form);
-      var actionUrl = form.getAttribute('action'); // Assuming the image upload URL is 'inc/profile_image.php'
-  
-      fetch(actionUrl, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.text())
-      .then(data => {
-        console.log(data); // Handle the response from the server
-        // Optionally, you can show a success message or update the image preview
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
-      //   form.submit();
-  
+  document.querySelectorAll('.date').forEach(function(dateInput) {
+    dateInput.addEventListener('change', function() {
+      checkRoomAvailability();
+    });
   });
 });
-
 </script>
 
 <?php
