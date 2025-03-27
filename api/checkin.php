@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update the reservations table to mark as checked in
         $query5 = "
             UPDATE reservations 
-            SET checked_in = 1, date_checked_in = NOW() 
+            SET checked_in = 1, date_checked_in = NOW(), status = 2 
             WHERE id = ?
         ";
         $stmt5 = $conn->prepare($query5);
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Commit transaction
         $conn->commit();
         http_response_code(200);
-        echo json_encode(['success' => 'Reservation checked in successfully']);
+        echo json_encode(['success' => 'check out completed']);
     } catch (Exception $e) {
         // Rollback transaction on error
         $conn->rollback();
