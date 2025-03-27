@@ -1,95 +1,155 @@
 <?php
 require_once 'config.php';
 require_once 'header.php';
-require_once 'secrets.php';
-require_once 'inc/functions.php';
 ?>
-<script src="https://js.stripe.com/v3/"></script>
+
+<?php 
+if (isset($_SESSION['email'])) {
+?>
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const paymentIntentId = '<?= $_GET['payment_intent_id']; ?>';
-  console.log('Payment Intent ID:', paymentIntentId);
-
-  try {
-    const response = await fetch(`https://b1e5-2607-fea8-d5c3-8100-b55c-d2b1-c034-a0ce.ngrok-free.app/client_secret.php?payment_intent_id=${paymentIntentId}`);
-    const {client_secret: clientSecret} = await response.json();
-
-    if (clientSecret) {
-      console.log('Client Secret:', clientSecret);
-
-      const stripe = Stripe('pk_test_51R4LZERq0GzSOwDwRwknBaC44wxC1MdiJ8WdUx1MMwefRtZlHYbmdMH9qID57Oje6BiVfcB5huEcsY26FgdBGnYb00hojg3z6l');
-      const options = {
-        clientSecret: clientSecret,
-        appearance: {
-          theme: 'night',
-          labels: 'floating',
-        }
-      };
-
-      // Set up Stripe.js and Elements to use in checkout form, passing the client secret obtained in a previous step
-      const elements = stripe.elements(options);
-
-      // Create and mount the Payment Element
-      const paymentElementOptions = { layout: 'tabs' };
-      const paymentElement = elements.create('payment', paymentElementOptions);
-      paymentElement.mount('#payment-element');
-
-      const form = document.getElementById('payment-form');
-
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const { error } = await stripe.confirmPayment({
-          // `Elements` instance that was used to create the Payment Element
-          elements,
-          confirmParams: {
-            return_url: 'https://b1e5-2607-fea8-d5c3-8100-b55c-d2b1-c034-a0ce.ngrok-free.app/payment_status.php',
-          },
-        });
-
-        if (error) {
-          // This point will only be reached if there is an immediate error when
-          // confirming the payment. Show error to your customer (for example, payment
-          // details incomplete)
-          const messageContainer = document.querySelector('#error-message');
-          messageContainer.textContent = error.message;
-        } else {
-          // Your customer will be redirected to your `return_url`. For some payment
-          // methods like iDEAL, your customer will be redirected to an intermediate
-          // site first to authorize the payment, then redirected to the `return_url`.
-        }
-      });
-    } else {
-      console.error('Client secret not found in response:', data);
-    }
-  } catch (error) {
-    console.error('Error fetching client secret:', error);
-  }
-});
+   $(function () {
+      $('#fname').val('<?= $_SESSION['fname'];?>');
+      $('#lname').val('<?= $_SESSION['lname'];?>');
+      $('#Email').val('<?= $_SESSION['email'];?>');
+      $('#phone').val('<?= $_SESSION['phone'];?>');
+      $('#address').val('<?= $_SESSION['address'];?>');
+      $('#country').val('<?= $_SESSION['country'];?>');
+      $('#city').val('<?= $_SESSION['city'];?>');
+   });
 </script>
+<?php } ?>
+
 <div class="container mt-5">
-   
-   <form id="payment-form">
-    <h3 class="text-center ">Payment</h3>
-      <div class="form-row justify-content-center">
+   <h2 class="text-center mb-4">Book Room</h2>
+   <form id="textForm" action="inc/book.php" method="post">
+      <div class="form-row justify-content-center dates">
          <div class="form-group col-md-4">
-            <label for="payment-element"></label>
-            <div id="payment-element">
-              <!-- A Stripe Element will be inserted here. -->
+            <label for="cin">Check in</label>
+            <input type="date" class="form-control date" name="checkin" id="cin" value="<?php echo date('Y-m-d')?>" required>
+         </div>
+         <div class="form-group col-md-4">
+            <label for="cout">Check out</label>
+            <input type="date" class="form-control date" name="checkout" id="cout" value="<?php echo date('Y-m-d', strtotime('+1 day'));?>" required>
+         </div>
+      </div>
+      <div id="roomContainer">
+         <div class="form-row justify-content-center room-row">
+            <div class="form-group col-md-2">
+               <label for="rtype_0">Room Type</label>
+               <select class="form-control rtype" id="rtype_0" name="room[0][rtype]" required>
+                  <option value="">Select Room Type</option>
+                  <!-- Options will be populated by JavaScript -->
+               </select>
+               <div class="availability-message text-danger"></div>
             </div>
-            <!-- Used to display form errors. -->
-            <div id="error-message" role="alert"></div>
+            <div class="form-group col-md-2">
+               <label for="numr_0">Number of Rooms</label>
+               <input type="number" class="form-control numr" name="room[0][numr]" id="numr_0" min="1" max="5" required>
+            </div>
+            <div class="form-group col-md-2">
+               <label for="price_0">Price</label>
+               <input class="form-control price" type="text" name="room[0][price]" id="price_0" value="0" readonly>
+            </div>
+            <div class="form-group col-md-1 ">
+               <button type="button" class="btn btn-danger remove-room mt-4">Remove</button>
+            </div>
          </div>
       </div>
       <div class="form-row justify-content-center">
+         <div class="form-group col-md-4 text-right">
+            <button id="addRoom" type="button" class="btn btn-secondary">Add Room</button>
+         </div>
+      </div>
+      <?php 
+if (!isset($_SESSION['email'])) {
+?>
+      <div class="form-row justify-content-center">
+         <div class="form-group col-md-4">
+            <label for="fname">Firstname</label>
+            <input type="text" class="form-control" name="fname" id="fname" value="" required>
+         </div>
+         <div class="form-group col-md-4">
+            <label for="lname">Lastname</label>
+            <input type="text" class="form-control" name="lname" id="lname" value="" required>
+         </div>
+      </div>
+      <div class="form-row justify-content-center">
+         <div class="form-group col-md-4">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" name="email" id="Email" value="" required>
+         </div>
+         <div class="form-group col-md-4">
+            <label for="phone">Phone number</label>
+            <input type="tel" class="form-control" name="phone" id="phone" value="" required>
+         </div>
+      </div>
+      <?php } ?>
+  
+      <div class="form-row justify-content-center">
          <div class="form-group col-md-4 text-center">
-            <button class="btn btn-primary" type="submit" id="submit">Submit</button>
+            <button class="btn btn-primary" type="submit" name="book">Book</button>
          </div>
       </div>
    </form>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+   checkRoomAvailability();
 
-<?php 
+  document.getElementById('addRoom').addEventListener('click', function() {
+    var roomContainer = document.getElementById('roomContainer');
+    var roomRows = document.querySelectorAll('.room-row');
+    var newIndex = roomRows.length;
+
+    var newRoomRow = document.createElement('div');
+    newRoomRow.className = 'form-row justify-content-center room-row';
+    newRoomRow.innerHTML = `
+      <div class="form-group col-md-2">
+        <label for="rtype_${newIndex}">Room Type</label>
+        <select class="form-control rtype" id="rtype_${newIndex}" name="room[${newIndex}][rtype]" required>
+          <option value="">Select Room Type</option>
+        </select>
+        <div class="availability-message text-danger"></div>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="numr_${newIndex}">Number of Rooms</label>
+        <input type="number" class="form-control numr" name="room[${newIndex}][numr]" id="numr_${newIndex}" min="1" max="5" required>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="price_${newIndex}">Price</label>
+        <input class="form-control price" type="text" name="room[${newIndex}][price]" id="price_${newIndex}" value="0" readonly>
+      </div>
+      <div class="form-group col-md-1">
+        <button type="button" class="btn btn-danger remove-room mt-4">Remove</button>
+      </div>
+    `;
+
+    roomContainer.appendChild(newRoomRow);
+    populateRoomTypes(newIndex);
+  });
+
+  document.getElementById('roomContainer').addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-room')) {
+      event.target.closest('.room-row').remove();
+    }
+  });
+
+  document.getElementById('roomContainer').addEventListener('change', function(event) {
+    if (event.target.classList.contains('rtype') || event.target.classList.contains('numr')) {
+      updatePriceAndAvailability(event.target);
+    }
+  });
+
+  document.querySelectorAll('.date').forEach(function(dateInput) {
+    dateInput.addEventListener('change', function() {
+      checkRoomAvailability();
+    });
+  });
+});
+</script>
+
+<?php
 require_once 'footer.php';
 ?>

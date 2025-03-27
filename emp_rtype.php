@@ -3,7 +3,7 @@ require_once 'config.php';
 require_once 'header.php';
 ?>
               
-<form class="form1" id="form1" action="inc/department" method="post">
+<form class="" id="" action="inc/department" method="post">
    <h2 >Department</h2>
  
    <input type="text" id="department" name="department" placeholder="department..." required>

@@ -31,7 +31,7 @@ while($row=mysqli_fetch_assoc($result)){
     <h2 id="headtitle" class="w3-center w3-padding-large w3-margin-top w3-margin-bottom"></h2>
 </div>
 <div class="w3-half">
-    <form class="form1" id="imageForm" action="inc/update_rtype_image.php?id=<?= $id; ?>" method="post" enctype="multipart/form-data">
+    <form class="" id="imageForm" action="inc/update_rtype_image.php?id=<?= $id; ?>" method="post" enctype="multipart/form-data">
         <div id="view_menu" class="w3-row-padding w3-center">
             <p><img id='img' class="w3-input w3-margin-bottom" src="" style="max-width: 600px; height: 385px;"></p>
             <p><input type="text" id="img_rtype" name="rtype" class="rtype w3-input w3-round-xxlarge w3-padding-large w3-margin-top w3-margin-bottom" required hidden></p>
@@ -55,7 +55,7 @@ while($row=mysqli_fetch_assoc($result)){
     </form>
 </div>
    <div class="w3-half">
-      <form class="form1 w3-row-padding" id="textForm" action="inc/update_rtype.php" method="post">
+      <form class=" w3-row-padding" id="textForm" action="inc/update_rtype.php" method="post">
          <p>
             <label class="w3-padding-large">Room Type</label>
          </p>

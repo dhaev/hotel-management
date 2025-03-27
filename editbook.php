@@ -62,7 +62,7 @@
       <?php    
 
    ?>
-   <div class="w3-content"><form id="form1" action="inc/update_book.php" method="post">
+   <div class="w3-content"><form id="" action="inc/update_book.php" method="post">
             
          <div class="w3-row-padding ">
             <div class="w3-col"><h2 class="w3-center w3-padding-large w3-margin-top w3-margin-bottom">Edit Book</h2>

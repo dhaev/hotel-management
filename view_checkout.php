@@ -9,9 +9,6 @@ require_once 'header.php';
       <tr class="w3-black">
         <th>#</th>
         <th>Customer Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Address</th>
         <th>Room No</th>
         <th>Room type</th>
         <th>Time</th>
@@ -19,7 +16,18 @@ require_once 'header.php';
     </thead>
     <tbody>
       <?php
-        $sql="SELECT book_rnum.id,book_rnum.BookID,CONCAT(customer.fname,' ',customer.lname) AS customername,customer.email,customer.phone,CONCAT(customer.address,',',customer.city,',',customer.country) AS address,room.rnum,room.RoomID,room_type.rtype,check_out.time  FROM `book`,`customer`,`room`,`room_type`,`check_out`,`book_rnum` WHERE (book_rnum.BookID=book.BookID AND book.customerID=customer.CustomerID AND book_rnum.RoomID=room.RoomID  AND room.RtypeID=room_type.RtypeID AND book_rnum.id=check_out.ord AND book_rnum.status=2)";
+        $sql = "SELECT 
+                    reservations.id AS ReservationID,
+                    CONCAT(customer.fname, ' ', customer.lname) AS CustomerName,
+                    room.rnum AS RoomNumber,
+                    room_type.rtype AS RoomType,
+                    reservations.date_checked_out AS CheckoutTime
+                FROM reservations
+                JOIN customer ON reservations.user_id = customer.CustomerID
+                JOIN reservation_details ON reservations.id = reservation_details.reservation_id
+                JOIN room ON reservation_details.type_id = room.RtypeID
+                JOIN room_type ON room.RtypeID = room_type.RtypeID
+                WHERE reservations.checked_out = 1";
         $stmt=mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt,$sql)){
              echo('view_booked.php ?  error= could not connect');
@@ -31,14 +39,11 @@ require_once 'header.php';
       ?>
       
       <tr>
-        <td><?php echo $row['BookID'];?></td>
-        <td><?php echo $row['customername'];?></td>
-        <td><?php echo $row['email'];?></td>
-        <td><?php echo $row['phone'];?></td>
-        <td><?php echo $row['address'];?></td>
-        <td><?php echo $row['rnum'];?></td>
-        <td><?php echo $row['rtype'];?></td>
-        <td><?php echo $row['time'];?></td>
+        <td><?php echo $row['ReservationID'];?></td>
+        <td><?php echo $row['CustomerName'];?></td>      
+        <td><?php echo $row['RoomNumber'];?></td>
+        <td><?php echo $row['RoomType'];?></td>
+        <td><?php echo $row['CheckoutTime'];?></td>
       </tr>
       <?php }
         mysqli_stmt_close($stmt);
@@ -47,22 +52,7 @@ require_once 'header.php';
   </table>  
 </div>
 
-<script>  
-  $(document).ready(function() {
-    $('#example23').DataTable( {
-        columnDefs: [ {
-            targets: [ 1 ],
-            orderData: [ 0, 1 ]
-        }, {
-            targets: [ 1 ],
-            orderData: [ 1, 0 ]
-        }, {
-            targets: [ 7 ],
-            orderData: [ 7, 0 ]
-        } ]
-    } );
-} );
-</script>
+
 
 <?php
 require_once 'footer.php';

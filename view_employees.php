@@ -21,7 +21,16 @@ require_once 'header.php';
     </thead>
     <tbody>
       <?php
-        $sql="SELECT * FROM employees ";
+        $sql = "SELECT 
+                    CustomerID AS id,
+                    fname,
+                    lname,
+                    email,
+                    phone,
+                    address,
+                    country,
+                    city
+                FROM employees";
         $stmt=mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt,$sql)){
              echo('index.php ?  error= could not connect');
@@ -73,21 +82,7 @@ require_once 'header.php';
      
 <script>
   
-  $(document).ready(function() {
-    $('#example23').DataTable( {
-        columnDefs: [ {
-            targets: [ 1 ],
-            orderData: [ 0, 1 ]
-        }, {
-            targets: [ 1 ],
-            orderData: [ 1, 0 ]
-        }, {
-            targets: [ 7 ],
-            orderData: [ 7, 0 ]
-        } ]
-    } );
-} );
-</script>
+
 
 <?php
 require_once 'footer.php';

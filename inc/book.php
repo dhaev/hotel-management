@@ -13,17 +13,30 @@ if (isset($_POST['checkin']) && isset($_POST['checkout'])) {
 
     $start_date = $_POST['checkin'];
     $end_date = $_POST['checkout'];
-    $fname = $_POST['fname'];
-    $lname = $_POST['lname'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $user_id = $_SESSION['CustomerID'];
-    // $user_id = $_POST['user_id'];
+
+    if (isset($_SESSION['email']) && isset($_SESSION['CustomerID'])) {
+        $user_id = $_SESSION['CustomerID'];
+    } else {
+        $fname = $_POST['fname'];
+        $lname = $_POST['lname'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+
+        // Insert customer into the database
+        $stmt = $conn->prepare("INSERT INTO customer (fname, lname, email, phone) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $fname, $lname, $email, $phone);
+        $stmt->execute();
+
+        // Retrieve the newly created customer ID
+        $user_id = $stmt->insert_id;
+
+        // Close the statement
+        $stmt->close();
+    }
+
     $status = 0;
-
     $room = $_POST['room'];
-
-    $total_amount =0;// = $_POST['total_amount']; // Calculate this based on room types and number of rooms
+    $total_amount = 0;
     $currency = 'usd';
     $metadata = [
         'user_id' => $user_id,
@@ -69,7 +82,7 @@ if (isset($_POST['checkin']) && isset($_POST['checkout'])) {
             'line_items' => $line_item_array,
             'mode' => 'payment',
             'success_url' => BASE_URL.'success.php',
-            'cancel_url' => BASE_URL.'site/cancel.php',
+            'cancel_url' => BASE_URL.'cancel.php',
             'metadata' => $metadata
         ]);
 

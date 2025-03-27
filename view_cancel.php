@@ -1,68 +1,106 @@
 <?php
 require_once 'config.php';
 require_once 'header.php';
+
+// Get filter values
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d');
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+
+// Pagination variables
+$limit = 30; // Number of rows per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
+$offset = ($page - 1) * $limit; // Calculate offset
+
+// Base SQL query with filtering
+$sql = "SELECT 
+            reservations.id AS ReservationID,
+            CONCAT(customer.fname, ' ', customer.lname) AS CustomerName,
+            room.rnum AS RoomNumber,
+            room_type.rtype AS RoomType,
+            reservations.date_cancelled AS CancelTime
+        FROM reservations
+        JOIN customer ON reservations.user_id = customer.CustomerID
+        JOIN reservation_details ON reservations.id = reservation_details.reservation_id
+        JOIN room ON reservation_details.type_id = room.RtypeID
+        JOIN room_type ON room.RtypeID = room_type.RtypeID
+        WHERE reservations.cancelled = 1 AND reservations.date_cancelled >= '$start_date'";
+
+// Add end_date filter if provided
+if (!empty($end_date)) {
+    $sql .= " AND reservations.date_cancelled <= '$end_date'";
+}
+
+// Add LIMIT and OFFSET for pagination
+$sql .= " LIMIT $limit OFFSET $offset";
+
+$result = mysqli_query($conn, $sql);
+
+// Check if there is data for the next page
+$next_offset = $offset + $limit;
+$next_sql = "SELECT 1 FROM reservations 
+             WHERE reservations.cancelled = 1 AND reservations.date_cancelled >= '$start_date'";
+if (!empty($end_date)) {
+    $next_sql .= " AND reservations.date_cancelled <= '$end_date'";
+}
+$next_sql .= " LIMIT 1 OFFSET $next_offset";
+$next_result = mysqli_query($conn, $next_sql);
+$has_next_page = mysqli_num_rows($next_result) > 0;
 ?>
 
 <div>
-  <table id="example23" class="w3-table-all w3-hoverable w3-card-4 w3-small w3-centered" >
-    <thead>
-      <tr  class="w3-black">
-        <th>#</th>
-        <th>Customer Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>Room No</th>
-        <th>Room type</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-        $sql="SELECT cancel.ord,book_rnum.BookID,CONCAT(customer.fname,' ',customer.lname) AS customername,customer.email,customer.phone,CONCAT(customer.address,',',customer.city,',',customer.country) AS address,room.rnum,room_type.rtype,cancel.time  FROM `book`,`customer`,`room`,`room_type`,cancel,`book_rnum` WHERE (book_rnum.BookID=book.BookID AND book.customerID=customer.CustomerID AND book_rnum.RoomID=room.RoomID  AND room.RtypeID=room_type.RtypeID AND book_rnum.id=cancel.ord AND book_rnum.status=3);";
-        $stmt=mysqli_stmt_init($conn);
-        if (!mysqli_stmt_prepare($stmt,$sql)){
-             echo('view_booked.php ?  error= could not connect');
-             exit();
-        }
-        mysqli_stmt_execute($stmt);
-        $result=mysqli_stmt_get_result($stmt);
-        while($row=mysqli_fetch_assoc($result)){
-      ?>
-      
-      <tr>
-        <td><?php echo $row['BookID'];?></td>
-        <td><?php echo $row['customername'];?></td>
-        <td><?php echo $row['email'];?></td>
-        <td><?php echo $row['phone'];?></td>
-        <td><?php echo $row['address'];?></td>
-        <td><?php echo $row['rnum'];?></td>
-        <td><?php echo $row['rtype'];?></td>
-        <td><?php echo $row['time'];?></td>
-      </tr>
-      <?php }
-        mysqli_stmt_close($stmt);
-      ?>
-    </tbody>
-  </table>  
+<!-- Filter Form -->
+<form method="GET">
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="start_date">Start Date</label>
+            <input type="date" class="form-control date" name="start_date" id="start_date" value="<?= htmlspecialchars($start_date) ?>" required>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="end_date">End Date</label>
+            <input type="date" class="form-control date" name="end_date" id="end_date" value="<?= htmlspecialchars($end_date) ?>">
+        </div>
+        <div class="form-group col-md-1 mt-4">
+            <button type="submit" class="btn btn-primary btn-md">Filter</button>
+        </div>
+    </div>
+</form>
 </div>
 
-<script>  
-  $(document).ready(function() {
-    $('#example23').DataTable( {
-        columnDefs: [ {
-            targets: [ 1 ],
-            orderData: [ 0, 1 ]
-        }, {
-            targets: [ 1 ],
-            orderData: [ 1, 0 ]
-        }, {
-            targets: [ 7 ],
-            orderData: [ 7, 0 ]
-        } ]
-    } );
-} );
-</script>
+<!-- Cancelled Reservations Table -->
+<table id="example23" class="w3-table-all w3-hoverable w3-card-4 w3-small w3-centered">
+    <thead>
+        <tr class="w3-black">
+            <th>#</th>
+            <th>Customer Name</th>
+           
+            <th>Room No</th>
+            <th>Room Type</th>
+            <th>Cancel Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+            <tr>
+                <td><?= $row['ReservationID'] ?></td>
+                <td><?= $row['CustomerName'] ?></td>
+              
+                <td><?= $row['RoomNumber'] ?></td>
+                <td><?= $row['RoomType'] ?></td>
+                <td><?= $row['CancelTime'] ?></td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="pagination">
+    <?php if ($page > 1) { ?>
+        <a class="btn btn-primary btn-sm m-1" href="?start_date=<?= htmlspecialchars($start_date) ?>&end_date=<?= htmlspecialchars($end_date) ?>&page=<?= $page - 1 ?>">Previous</a>
+    <?php } ?>
+    <?php if ($has_next_page) { ?>
+        <a class="btn btn-primary btn-sm m-1" href="?start_date=<?= htmlspecialchars($start_date) ?>&end_date=<?= htmlspecialchars($end_date) ?>&page=<?= $page + 1 ?>">Next</a>
+    <?php } ?>
+</div>
 
 <?php
 require_once 'footer.php';

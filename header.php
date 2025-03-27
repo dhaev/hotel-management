@@ -56,7 +56,9 @@ session_start();
             <div class="w3-container">
 
 
-            <form id="form1" id="login" action="inc/login.php" method="post">
+            <form id="loginForm" action="inc/login.php" method="post">
+                <div class="form-row justify-content-center" id="error-message" class="text-danger"></div>
+                <div class="form-row justify-content-center" id="success-message" class="text-success"></div>
       
       <div class="form-row justify-content-center mt-5">
          <div class="form-group col-md-4">
@@ -74,6 +76,33 @@ session_start();
          <button class="btn btn-secondary form-group col-md-4 text-center" type="submit" id="log_in" name="login">Submit</button>
       </div>
    </form>
+   <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('success-message').textContent = data.message;
+                document.getElementById('error-message').textContent = '';
+                setTimeout(() => {
+                    window.location.href = data.url;
+                }, 1000);
+            } else {
+                document.getElementById('error-message').textContent = data.message;
+                document.getElementById('success-message').textContent = '';
+            }
+        })
+        .catch(error => {
+            document.getElementById('error-message').textContent = 'An error occurred. Please try again.';
+            document.getElementById('success-message').textContent = '';
+        });
+    });
+</script>
 
             </div>
    
@@ -82,4 +111,3 @@ session_start();
 
     <div id="main" class="w3-padding-large w3-padding-top-64">
         <!-- Main content goes here -->
-    

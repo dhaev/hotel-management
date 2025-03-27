@@ -5,7 +5,7 @@ require_once 'header.php';
 
              
                  
-         <form class="form1" id="form1" id='login' action="inc/login.php" method="post">
+         <form class="loginForm" id="loginForm" id='login' action="inc/login.php" method="post">
             <h2 >Login</h2>
           
         <input type="email" id="email" name="email" placeholder="email..." autocomplete="username" required>

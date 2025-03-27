@@ -195,6 +195,7 @@
 		$email=emailExists($conn,$email);
 		if ($email === false) {
 			echo('email does not exist');
+			return false;
 			exit();
 		}
 
@@ -202,6 +203,7 @@
 		$pwdcheck=password_verify($pwd, $hashedpwd);
 		if ( $pwdcheck === false) {
 			echo('incorrect password');
+			return false;
 			exit();
 		}
 		elseif ($pwdcheck === true) {
@@ -215,6 +217,7 @@
 			$_SESSION['country'] =$email['country'];
 			$_SESSION['city'] =$email['city'];			
 			$_SESSION['image'] =$email['image'];
+			return true;
 		}
  }
 

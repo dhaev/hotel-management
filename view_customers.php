@@ -20,7 +20,16 @@ require_once 'header.php';
     </thead>
     <tbody>
       <?php
-        $sql="SELECT * FROM customer ";
+        $sql = "SELECT 
+                    CustomerID,
+                    fname,
+                    lname,
+                    email,
+                    phone,
+                    address,
+                    country,
+                    city
+                FROM customer";
         $stmt=mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt,$sql)){
              echo('index.php ?  error= could not connect');
@@ -57,23 +66,7 @@ require_once 'header.php';
   </table>  
 </div>
      
-<script>
-  
-  $(document).ready(function() {
-    $('#example23').DataTable( {
-        columnDefs: [ {
-            targets: [ 1 ],
-            orderData: [ 0, 1 ]
-        }, {
-            targets: [ 1 ],
-            orderData: [ 1, 0 ]
-        }, {
-            targets: [ 8 ],
-            orderData: [ 8, 0 ]
-        } ]
-    } );
-} );
-</script>
+
 
 <?php
 require_once 'footer.php';
